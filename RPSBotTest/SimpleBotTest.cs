@@ -19,15 +19,30 @@ namespace RPSBotTest
 
             Assert.AreNotEqual(random, 6);
         }
+        [TestMethod]
+        public void BotPlaysDynamite()
+        {
+            SimpleBot simplebot = new SimpleBot();
+            Round round = new Round();
 
+            Move move = Move.W;
+            round.SetP1(move);
+
+            move = simplebot.PlayDynamite(round);
+            Assert.AreEqual(move, Move.D);
+
+        }
         [TestMethod]
         public void BotPlaysLessThan100Dynamites()
         {
             SimpleBot simplebot = new SimpleBot();
+            Round[] rounds = new Round[1000];
+            game.SetRounds(rounds);
 
+            simplebot.GetTestValue(true);
 
             bool fail = true;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < rounds.Length; i++)
             {
                 simplebot.MakeMove(game);
             }
@@ -41,5 +56,6 @@ namespace RPSBotTest
             }
             Assert.IsFalse(fail);
         }
+
     }
 }

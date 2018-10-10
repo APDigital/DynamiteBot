@@ -11,42 +11,74 @@ namespace RPSBot
     public class SimpleBot : IBot
     {
         public int DynamiteCount { get; set; }
+        public bool TestValue { get; set; }
         public Move MakeMove(Gamestate gamestate)
         {
-            int random = GenerateRandomNumber(1, 4);
-            Move move = Move.S;
-
-            if (CanPlayDynamite(gamestate) == true && random == 4)
+            int random = 0;
+            if (TestValue == false)
             {
-                move = Move.D;
+                random = GenerateRandomNumber(1, 5);
             }
+            else
+            {
+                random = 4;
+            }
+
+            Move move = Move.S;
+            Round round = new Round();
 
             switch (random)
             {
                 case 1:
                     move = Move.R;
+                    round.SetP1(move);
                     break;
                 case 2:
                     move = Move.P;
+                    round.SetP1(move);
+                    break;
+                case 3:
+                    move = Move.S;
+                    round.SetP1(move);
+                    break;
+                case 4:
+                    move = PlayDynamite(round);
+                    round.SetP1(move);
+                    break;
+                case 5:
+                    move = PlayDynamite(round);
+                    round.SetP1(move);
                     break;
                 default:
-                    move = Move.S;
+                    move = Move.P;
+                    round.SetP1(move);
                     break;
             }
 
             return move;
         }
 
-        private bool CanPlayDynamite(Gamestate gamestate)
+        public bool GetTestValue(bool value)
         {
-            foreach (Round round in gamestate.GetRounds())
+            TestValue = value;
+            return TestValue;
+        }
+        public Move PlayDynamite(Round round)
+        {
+            Move move = Move.D;
+            if (CanPlayDynamite() == true)
             {
-                if (round.GetP1() == Move.D)
-                {
-                    DynamiteCount++;
-                }
+                DynamiteCount++;
             }
+            else
+            {
+                move = Move.W;
+            }
+            return move;
+        }
 
+        private bool CanPlayDynamite()
+        {
             if (DynamiteCount < 100)
             {
                 return true;
